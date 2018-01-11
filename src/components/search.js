@@ -19,6 +19,7 @@ class Search extends Component {
 
   handleClick = () => {
     this.props.resetState();
+    this.props.isLoading();
     // console.log(this.props);
     //Call the geocoder function to get the coordinates
     let address = $('#address-input').val();
@@ -44,7 +45,8 @@ class Search extends Component {
       lng = res[0].location.lng;
       // console.log("Lat", lat);
       // console.log("Long", lng);
-      searchByAddress(lat, lng, radius, budget);
+      console.log(lat, lng, radius, budget);
+      searchByAddress(lat, lng, radius, budget, 0);
       // setResults();
     });
   }

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import $ from 'jquery';
+import ReactLoading from 'react-loading'
 
 import Search from '../components/search'
 import ResultsList from '../components/resultsList'
+
 
 import '../css/frontpage.css'
 
@@ -17,14 +19,17 @@ class FrontPage extends Component {
       radius: 10000,
       budget: 0,
       total_restaurants: 0,
+      restaurants_under_budget: 0,
       restaurants: [],
+      isLoading: false
     };
 
     this.searchByAddress = this.searchByAddress.bind(this);
     this.resetState = this.resetState.bind(this);
+    this.isLoading = this.isLoading.bind(this);
   }
 
-  searchByAddress(latitude, longitude, radius, budget) {
+  searchByAddress(latitude, longitude, radius, budget, start) {
     // console.log("Lat", latitude);
     // console.log("Long", longitude);
 
@@ -36,13 +41,16 @@ class FrontPage extends Component {
       params: {
         lat: latitude,
         lon: longitude,
-        radius: radius
+        radius: radius,
+        start: start
       }
     })
       .then((response) => {
-        console.log(response)
-        let total_restaurants = response.data.results_found;
+        this.setState({
+          total_restaurants: response.data.results_found
+        })
         let restaurantsArray = response.data.restaurants;
+        let counter = 0;
         console.log(restaurantsArray);
 
         for (let i = 0; i < restaurantsArray.length; i++) {
@@ -57,11 +65,20 @@ class FrontPage extends Component {
             console.log("This item is under budget");
             restaurantState.push(restaurantsArray[i].restaurant)
             this.setState({
-              total_restaurants: total_restaurants,
-              restaurants: restaurantState
+              restaurants: restaurantState,
+              restaurants_under_budget: this.state.restaurants_under_budget+1
             });
           }
         }
+
+        if (start < this.state.total_restaurants) {
+           this.searchByAddress(latitude, longitude, radius, budget, start+20)
+         }
+         this.setState({
+           isLoading: false
+         });
+         console.log("All Results:", this.state.restaurants);
+         return;
 
         //set state of results to be the response
       })
@@ -92,19 +109,32 @@ class FrontPage extends Component {
   resetState() {
     this.setState({
       total_restaurants: 0,
+      restaurants_under_budget: 0,
       restaurants: []
     })
   }
+  isLoading() {
+     this.setState({
+       isLoading: true
+     })
+   }
 
 
   render () {
     return (
       <div>
       <h1 className='title'> Food Budget App </h1>
-        <Search searchAddressArea={this.searchByAddress} resetState={this.resetState}/>
-        { this.state.total_restaurants > 0 ?
+      <Search searchAddressArea={this.searchByAddress} resetState={this.resetState} isLoading={this.isLoading} />
+        { this.state.isLoading === true ?
+          <div id="loadingSpinnerContainer">
+            <ReactLoading id="loadingSpinner" type="spin" color="#444"></ReactLoading>
+          </div>
+          : ''
+        }
+        { this.state.restaurants.length > 10 && this.state.isLoading === false ?
           <div>
-            <p>{this.state.total_restaurants} Restaurants found</p>
+            <p>{this.state.total_restaurants} Restaurants found in your area</p>
+            <p>{this.state.restaurants_under_budget} are in your budget range</p>
             <ResultsList restaurants={this.state.restaurants}></ResultsList>
           </div>
           : ''

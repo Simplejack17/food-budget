@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import $ from 'jquery';
 
 import Search from '../components/search'
+import ResultsList from '../components/resultsList'
+
 import '../css/frontpage.css'
 
 class FrontPage extends Component {
@@ -11,36 +14,20 @@ class FrontPage extends Component {
     this.state = {
       latitude: '',
       longitude: '',
-      radius: 1000,
-      budget: '',
+      radius: 10000,
+      budget: 0,
+      total_restaurants: 0,
       restaurants: [],
-      results: [],
     };
 
     this.searchByAddress = this.searchByAddress.bind(this);
+    this.resetState = this.resetState.bind(this);
   }
 
-  // componentDidMount () {
-  //     axios.get("https://developers.zomato.com/api/v2.1/search", {
-  //       headers: {
-  //         'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
-  //         'Accept': 'application/json'
-  //       },
-  //       params: {
-  //         lat: '38.8355869',
-  //         lon: '-77.10573999999997',
-  //         radius: '100000'
-  //       }
-  //     })
-  //       .then((response) => {
-  //         console.log(response)
-  //       })
-  //       .catch((err) => {
-  //         console.log(err)
-  //       })
-  // }
+  searchByAddress(latitude, longitude, radius, budget) {
+    // console.log("Lat", latitude);
+    // console.log("Long", longitude);
 
-  searchByAddress(latitude, longitude) {
     axios.get("https://developers.zomato.com/api/v2.1/search", {
       headers: {
         'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
@@ -49,63 +36,80 @@ class FrontPage extends Component {
       params: {
         lat: latitude,
         lon: longitude,
-        radius: 10000
+        radius: radius
       }
     })
       .then((response) => {
-        // console.log(response)
-
+        console.log(response)
+        let total_restaurants = response.data.results_found;
         let restaurantsArray = response.data.restaurants;
+        console.log(restaurantsArray);
 
         for (let i = 0; i < restaurantsArray.length; i++) {
-          let id = restaurantsArray[i].restaurant.R.res_id;
+          let average_cost_for_two = restaurantsArray[i].restaurant.average_cost_for_two;
+          console.log("Average Cost", average_cost_for_two);
+          console.log(budget);
+          // console.log(id);
           let restaurantState = this.state.restaurants;
+          // this.searchRestaurant(id);
 
-          this.searchRestaraunt(id);
-
-          restaurantState.push(id)
-          this.setState({
-            restaurants: restaurantState
-          });
+          if (average_cost_for_two < budget) {
+            console.log("This item is under budget");
+            restaurantState.push(restaurantsArray[i].restaurant)
+            this.setState({
+              total_restaurants: total_restaurants,
+              restaurants: restaurantState
+            });
+          }
         }
 
-        console.log(this.state.restaurants);
-
         //set state of results to be the response
-
       })
       .catch((err) => {
         console.log(err)
       })
   }
 
-  searchRestaraunt(restarauntId) {
-    axios.get("https://developers.zomato.com/api/v2.1/dailymenu", {
+  searchRestaurant(restarauntId) {
+    axios.get("https://developers.zomato.com/api/v2.1/restaurant", {
       headers: {
         'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
         'Accept': 'application/json'
       },
       params: {
-        res_id: 16507624
+        res_id: restarauntId
       }
     })
       .then((response) => {
-        console.log(response)
+        //console.log(response)
         //logic for looping through menu items and checking if they are under budget
-
       })
       .catch((err) => {
         console.log(err)
       })
   }
   // <Results results={this.state.results} />
+  resetState() {
+    this.setState({
+      total_restaurants: 0,
+      restaurants: []
+    })
+  }
 
 
   render () {
     return (
       <div>
       <h1 className='title'> Food Budget App </h1>
-        <Search searchAddressArea={this.searchByAddress}/>
+        <Search searchAddressArea={this.searchByAddress} resetState={this.resetState}/>
+        { this.state.total_restaurants > 0 ?
+          <div>
+            <p>{this.state.total_restaurants} Restaurants found</p>
+            <ResultsList restaurants={this.state.restaurants}></ResultsList>
+          </div>
+          : ''
+        }
+
       </div>
     )
   }

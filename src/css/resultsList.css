@@ -16,3 +16,8 @@
   width:100%;
   height: auto;
 }
+
+.PotentialMatchesContainer {
+  overflow: scroll;
+  width: 400px;
+}

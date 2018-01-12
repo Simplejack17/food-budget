@@ -15,7 +15,7 @@ class ResultsList extends Component {
     const restaurants = this.state.restaurants.map(restaurant => <ListItem key={restaurant.R.res_id} restaurant={restaurant} />);
 
     return (
-      <div className='PotentialMatches container'>
+      <div className='PotentialMatchesContainer'>
         <div>
           <h3 className="PotentialMatches">Potential Matches</h3>
         </div>

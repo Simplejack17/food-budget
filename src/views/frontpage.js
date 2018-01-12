@@ -32,11 +32,13 @@ class FrontPage extends Component {
   searchByAddress(latitude, longitude, radius, budget, start) {
     // console.log("Lat", latitude);
     // console.log("Long", longitude);
+
     // 7a6a8a2de6aa306f165cacd29b2909ab
     // b12890147fb1262fe046916ea4bdc6ac
+    // 8b97bc32bb855faaf3b77273f2478513
     axios.get("https://developers.zomato.com/api/v2.1/search", {
       headers: {
-        'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
+        'user-key': '8b97bc32bb855faaf3b77273f2478513',
         'Accept': 'application/json'
       },
       params: {
@@ -71,9 +73,9 @@ class FrontPage extends Component {
           }
         }
 
-        if (start < this.state.total_restaurants) {
-           this.searchByAddress(latitude, longitude, radius, budget, start+20)
-         }
+        // if (start < 20) {
+        //    this.searchByAddress(latitude, longitude, radius, budget, start+20)
+        //  }
          this.setState({
            isLoading: false
          });

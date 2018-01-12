@@ -32,7 +32,8 @@ class FrontPage extends Component {
   searchByAddress(latitude, longitude, radius, budget, start) {
     // console.log("Lat", latitude);
     // console.log("Long", longitude);
-
+    // 7a6a8a2de6aa306f165cacd29b2909ab
+    // b12890147fb1262fe046916ea4bdc6ac
     axios.get("https://developers.zomato.com/api/v2.1/search", {
       headers: {
         'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
@@ -50,7 +51,6 @@ class FrontPage extends Component {
           total_restaurants: response.data.results_found
         })
         let restaurantsArray = response.data.restaurants;
-        let counter = 0;
         console.log(restaurantsArray);
 
         for (let i = 0; i < restaurantsArray.length; i++) {
@@ -87,24 +87,24 @@ class FrontPage extends Component {
       })
   }
 
-  searchRestaurant(restarauntId) {
-    axios.get("https://developers.zomato.com/api/v2.1/restaurant", {
-      headers: {
-        'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
-        'Accept': 'application/json'
-      },
-      params: {
-        res_id: restarauntId
-      }
-    })
-      .then((response) => {
-        //console.log(response)
-        //logic for looping through menu items and checking if they are under budget
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
+  // searchRestaurant(restarauntId) {
+  //   axios.get("https://developers.zomato.com/api/v2.1/restaurant", {
+  //     headers: {
+  //       'user-key': '7a6a8a2de6aa306f165cacd29b2909ab',
+  //       'Accept': 'application/json'
+  //     },
+  //     params: {
+  //       res_id: restarauntId
+  //     }
+  //   })
+  //     .then((response) => {
+  //       //console.log(response)
+  //       //logic for looping through menu items and checking if they are under budget
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }
   // <Results results={this.state.results} />
   resetState() {
     this.setState({
@@ -113,6 +113,7 @@ class FrontPage extends Component {
       restaurants: []
     })
   }
+
   isLoading() {
      this.setState({
        isLoading: true
@@ -123,24 +124,29 @@ class FrontPage extends Component {
   render () {
     return (
       <div>
-      <h1 className='title'> Food Budget App </h1>
-      <Search searchAddressArea={this.searchByAddress} resetState={this.resetState} isLoading={this.isLoading} />
-        { this.state.isLoading === true ?
-          <div id="loadingSpinnerContainer">
-            <ReactLoading id="loadingSpinner" type="spin" color="#444"></ReactLoading>
-          </div>
-          : ''
+        <div className='title'>
+          <h1> Fudg-it </h1>
+        </div>
+        <div className='inputContainer'>
+          <Search searchAddressArea={this.searchByAddress} resetState={this.resetState} isLoading={this.isLoading} />
+            { this.state.isLoading === true ?
+              <div id="loadingSpinnerContainer">
+                <ReactLoading id="loadingSpinner" type="spin" color="#444"></ReactLoading>
+              </div>
+        : ''
         }
+        </div>
         { this.state.restaurants.length > 10 && this.state.isLoading === false ?
           <div>
-            <p>{this.state.total_restaurants} Restaurants found in your area</p>
-            <p>{this.state.restaurants_under_budget} are in your budget range</p>
-            <ResultsList restaurants={this.state.restaurants}></ResultsList>
+
+          <p>{this.state.total_restaurants} Restaurants found in your area</p>
+          <p>{this.state.restaurants_under_budget} are in your budget range</p>
+          <ResultsList restaurants={this.state.restaurants}></ResultsList>
           </div>
           : ''
         }
-
       </div>
+
     )
   }
 }

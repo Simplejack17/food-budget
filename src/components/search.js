@@ -11,7 +11,7 @@ class Search extends Component {
     super(props);
 
     this.state = {
-      radius: 5
+      radius: 50
     }
 
     this.setRadius = this.setRadius.bind(this);
@@ -63,11 +63,17 @@ class Search extends Component {
       <div>
         <div className="searchContainer">
             <label>Address</label>
-            <input id="address-input" type="text" name="address" placeholder="Enter your address"></input>
-            <label>Radius: <span>{this.state.radius}</span></label>
-            <input id="radius-input" type="range" name="radius" min="5" max="50" step="5" onChange={this.setRadius}></input>
+            <div className="adressInputContainer">
+              <input id="address-input" type="text" name="address" placeholder="Enter your address"></input>
+            </div>
+            <div className="radiusInputContainer">
+              <label>Radius (miles): <span>{this.state.radius}</span></label>
+              <input id="radius-input" type="range" name="radius" min="5" max="50" step="5" className='radiusInput'onChange={this.setRadius}></input>
+            </div>
+            <div className="budgetInputContainer">
             <label>Budget</label>
             <input id="budget-input" type="text" name="budget" placeholder="Enter your budget"></input>
+            </div>
             <div className="search-button-container">
               <button onClick={this.handleClick} id="searchButton">Search</button>
             </div>

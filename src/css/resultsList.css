@@ -1,0 +1,18 @@
+.resultsList div {
+  background-color: teal;
+  margin-bottom: 10px;
+  border-style: solid;
+}
+
+.resultsList p {
+  margin: 10px;
+}
+
+.resultsList h3 {
+  margin: 10px;
+}
+
+.resultsList img {
+  width:100%;
+  height: auto;
+}

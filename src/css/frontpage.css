@@ -1,3 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans+SC');
+
+
 .title{
-  text-align: center;
+  background-color: lightblue;
+  margin-top: 0;
+  padding-left: 20px;
+  font-family: 'Alegreya Sans SC', sans-serif;
+  border-bottom-style: solid;
+  width: 27.5%;
+  position: relative;
+}
+
+.inputContainer {
+  bottom: 0;
+  margin-bottom: -1px;
+  padding: 20px;
+  background-color: lightblue;
+  width: 25%;
+  height: -webkit-fill-available;
+  font-family: 'Alegreya Sans SC', sans-serif;
+  border-right-style: solid;
+  float: left;
+}
+
+
+.resultsContainer{
+  float: right;
+  width: 75%;
 }

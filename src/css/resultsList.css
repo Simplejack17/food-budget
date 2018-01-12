@@ -1,11 +1,15 @@
+.resultsList {
+}
+
 .resultsList div {
-  background-color: teal;
-  margin-bottom: 10px;
-  border-style: solid;
+  background-color: lightblue;
+  margin-bottom: 12px;
+  border-bottom-style: solid;
 }
 
 .resultsList p {
   margin: 10px;
+  float: right;
 }
 
 .resultsList h3 {
@@ -19,5 +23,12 @@
 
 .PotentialMatchesContainer {
   overflow: scroll;
-  width: 400px;
+  width: 70%;
+  height: 20%;
+}
+
+.PotentialMatchesContainer img{
+  width: 20%;
+  height: 20%;
+
 }
